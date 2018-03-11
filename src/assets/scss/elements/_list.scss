@@ -1,0 +1,42 @@
+ul.list-weather{
+  padding: 0 10px 20px;
+
+  li {
+    display: inline-block;
+    margin-right: 2px;
+    padding: 6px;
+    background-color: rgba(0,0,0,.25);
+    border-radius: 2px;
+
+    &:last-child {
+      margin-right: 0px;
+    }
+
+    span {
+      text-shadow: 1px 1px 1px rgba(0,0,0,.54);
+      display: block;
+      margin: 2px 0;
+
+      img {
+        text-align: center;
+        max-width: 36px;
+        border-radius: 2px;
+        padding: 2px 5px;
+        background-color: #fff;
+      }
+
+      &.day {
+        font-size: .9em;
+      }
+
+      &.icon-weather {
+        margin: 15px 0;
+      }
+
+      &.temperature {
+        font-size: .7em;
+        margin: 8px 0;
+      }
+    }
+  }
+}

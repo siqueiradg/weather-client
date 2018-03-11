@@ -1,0 +1,16 @@
+.cards {
+	margin: 15px 0;
+    background-color: rgba(0,0,0,.45);
+    
+    .card-header {
+        padding: 10px 10px 0;
+        margin-bottom: 0;
+
+        h2 {
+            display: block;
+            font-size: 1em;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,.8);
+        }
+    }
+}

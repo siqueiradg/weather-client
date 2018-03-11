@@ -18,7 +18,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "assets/css/ionicons.min.css",
+        "assets/css/themify-icons.css",
         "../node_modules/bootstrap/scss/bootstrap.scss",
         "assets/scss/app.scss"
       ],

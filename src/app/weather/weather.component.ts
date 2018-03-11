@@ -10,4 +10,6 @@ export class WeatherComponent implements OnInit {
   constructor() { }
 
   ngOnInit() { }
+
+  changeBackground(city: string): void {}
 }

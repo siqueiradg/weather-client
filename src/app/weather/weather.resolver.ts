@@ -17,7 +17,7 @@ export class WeatherResolver implements Resolve<WeatherNow> {
 
             const data = JSON.parse(localStorage.getItem('offlineData'));
             if (data != undefined || data != null) {
-              console.log(data);
+              return this.service.getWeatherNow(data[0].code);
             } else {
               return this.service.getWeatherNow('5090');
             }

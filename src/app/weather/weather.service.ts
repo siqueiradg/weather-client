@@ -1,3 +1,4 @@
+import { GeneralConfig } from './../shared/config/general-config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RequestOptions } from '@angular/http';
 import { Injectable } from '@angular/core';
@@ -18,7 +19,7 @@ export class WeatherService{
     this.searchWeatherUrl = '/api/v1/weather/locale/';
     this.historyWeatherUrl = '/api/v1/forecast/locale/';
     this.searchCity = '/api/v1/locale/city?name=';
-    this.params = '?token=87ab74f81afff9d6f94880d228543852';
+    this.params = '?token=' + GeneralConfig.tokenClimaTempo.key;
   }
 
   getWeatherNow(codeCity: string): Observable<WeatherNow> {

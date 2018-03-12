@@ -7,10 +7,10 @@
             <div class="city-container">
               <h1 class="city">{{ weatherNow.name }} - {{ weatherNow.state }}</h1>
               <div class="buttons">
-                <button>
+                <button (click)="addCity()">
                   <i class="ti-star"></i>
                 </button>
-                <button>
+                <button (click)="open(content)">
                   <i class="ti-location-pin"></i> Alterar Localização</button>
               </div>
             </div>
@@ -55,7 +55,7 @@
               <ul class="list-weather">
                 <ng-container *ngFor="let item of weatherAll.data; let i=index">
                   <li *ngIf="i<7" class="item-weather">
-                    <span class="day">Seg.</span>
+                    <span class="day">{{ item.date | date:'EEE' }}</span>
                     <span class="icon-weather">
                       <img src="assets/img/weather/{{ item.text_icon.icon.dawn }}.png">
                     </span>
@@ -67,20 +67,43 @@
             </div>
           </div>
         </div>
-        <div class="col-12 col-md-7">
+        <div *ngIf="weatherAll != undefined" class="col-12 col-md-7">
           <div class="cards">
             <div class="card-header">
               <h2>
                 <i class="ti-bar-chart"></i> Variação da Temperatura</h2>
             </div>
             <div class="card-container">
-              <canvas id="chartTemperature" height="150"></canvas>
+              <canvas id="chartTemperature" height="150">{{ chart }}</canvas>
             </div>
           </div>
         </div>
       </div>
     </section>
   </div>
-  <div class="bg" style="background-image:url('http://blog.avianca.com.br/wp-content/uploads/2017/05/BLUMENAU-SC-iStock-605987594-2.jpg')"></div>
+  <div class="bg" style="background-image:url('')"></div>
 </div>
 
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-body">
+      <div class="new-location">
+        <i class="ti-location-pin"></i> Nova Localização
+      </div>
+      <div class="bookmarks">
+        <span>
+            <i class="ti-star"></i> Favoritos
+        </span>
+        <ul class="list-bookmarks">
+          <li class="item-favorite">Campo Grande - MS</li>
+          <li class="item-favorite">Socorro - SP</li>
+          <li class="item-favorite">Franca - SP</li>
+          <li class="item-favorite">Blumenau - SC</li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-light" (click)="updateCity()">Atualizar</button>
+      <button type="button" class="btn btn-sm btn-outline-light" (click)="c('Close click')"><i class="ti-close"></i></button>
+    </div>
+</ng-template>

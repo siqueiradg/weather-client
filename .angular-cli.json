@@ -22,7 +22,8 @@
         "../node_modules/bootstrap/scss/bootstrap.scss",
         "assets/scss/app.scss"
       ],
-      "scripts": [],
+      "scripts": [
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

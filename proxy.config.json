@@ -1,0 +1,8 @@
+{
+  "/api/*": {
+    "target": "https://apiadvisor.climatempo.com.br",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

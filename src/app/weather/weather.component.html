@@ -5,7 +5,7 @@
         <div class="col-12 col-md-7">
           <div class="city">
             <div class="city-container">
-              <h1 class="city">Blumenau - SC</h1>
+              <h1 class="city">{{ weatherNow.name }} - {{ weatherNow.state }}</h1>
               <div class="buttons">
                 <button>
                   <i class="ti-star"></i>
@@ -15,7 +15,7 @@
               </div>
             </div>
             <span class="country">Brasil</span>
-            <span class="date">3/11, 8:27 AM</span>
+            <span class="date">{{ weatherNow.data.date | date:'short'}}</span>
             <span class="tip">
               <i class="ti-light-bulb"></i> O dia está ótimo para uma caminhada.
             </span>
@@ -24,18 +24,18 @@
         <div class="col-12 col-md-5">
           <div class="weather-now">
             <div class="weather">
-              <img src="https://icons.wxug.com/i/c/i/partlycloudy.gif">
-              <h2>Nublado</h2>
+              <img src="assets/img/weather/{{ weatherNow.data.icon }}.png">
+              <h2>{{ weatherNow.data.condition }}</h2>
             </div>
             <div class="details">
               <span class="avg-temperature">
-                <i class="ti-arrow-up"></i> 29°
+                <i class="ti-arrow-up"></i> {{ weatherData.temperature.max }}°
               </span>
               <span class="avg-temperature">
-                <i class="ti-arrow-down"></i> 22°
+                <i class="ti-arrow-down"></i> {{ weatherData.temperature.min }}°
               </span>
               <span class="temperature">
-                22°
+                {{ weatherNow.data.temperature }}°
               </span>
             </div>
           </div>

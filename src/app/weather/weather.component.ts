@@ -49,6 +49,7 @@ export class WeatherComponent implements OnInit {
     this.weatherService.getWeatherAll(this.weatherNow.id).subscribe(
       (data: WeatherAll) => {
         this.weatherAll = data;
+        console.log(this.weatherAll );
         this.weatherData = data.data[0];
       },
       (error: any) => {

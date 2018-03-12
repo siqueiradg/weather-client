@@ -44,7 +44,7 @@
     </header>
     <section id="weather">
       <div class="row">
-        <div class="col-12 col-md-5">
+        <div *ngIf="weatherAll != undefined" class="col-12 col-md-5">
           <div class="cards">
             <div class="card-header">
               <h2>
@@ -53,62 +53,16 @@
             </div>
             <div class="card-container">
               <ul class="list-weather">
-                <li class="item-weather">
-                  <span class="day">Seg.</span>
-                  <span class="icon-weather">
-                    <img src="https://icons.wxug.com/i/c/i/partlycloudy.gif">
-                  </span>
-                  <span class="temperature">min 22°</span>
-                  <span class="temperature">max 22°</span>
-                </li>
-                <li class="item-weather">
-                  <span class="day">Ter.</span>
-                  <span class="icon-weather">
-                    <img src="https://icons.wxug.com/i/c/i/partlycloudy.gif">
-                  </span>
-                  <span class="temperature">min 22°</span>
-                  <span class="temperature">max 22°</span>
-                </li>
-                <li class="item-weather">
-                  <span class="day">Qua.</span>
-                  <span class="icon-weather">
-                    <img src="https://icons.wxug.com/i/c/i/partlycloudy.gif">
-                  </span>
-                  <span class="temperature">min 22°</span>
-                  <span class="temperature">max 22°</span>
-                </li>
-                <li class="item-weather">
-                  <span class="day">Qui.</span>
-                  <span class="icon-weather">
-                    <img src="https://icons.wxug.com/i/c/i/partlycloudy.gif">
-                  </span>
-                  <span class="temperature">min 22°</span>
-                  <span class="temperature">max 22°</span>
-                </li>
-                <li class="item-weather">
-                  <span class="day">Sex.</span>
-                  <span class="icon-weather">
-                    <img src="https://icons.wxug.com/i/c/i/partlycloudy.gif">
-                  </span>
-                  <span class="temperature">min 22°</span>
-                  <span class="temperature">max 22°</span>
-                </li>
-                <li class="item-weather">
-                  <span class="day">Sab.</span>
-                  <span class="icon-weather">
-                    <img src="https://icons.wxug.com/i/c/i/partlycloudy.gif">
-                  </span>
-                  <span class="temperature">min 22°</span>
-                  <span class="temperature">max 22°</span>
-                </li>
-                <li class="item-weather">
-                  <span class="day">Dom.</span>
-                  <span class="icon-weather">
-                    <img src="https://icons.wxug.com/i/c/i/partlycloudy.gif">
-                  </span>
-                  <span class="temperature">min 22°</span>
-                  <span class="temperature">max 22°</span>
-                </li>
+                <ng-container *ngFor="let item of weatherAll.data; let i=index">
+                  <li *ngIf="i<7" class="item-weather">
+                    <span class="day">Seg.</span>
+                    <span class="icon-weather">
+                      <img src="assets/img/weather/{{ item.text_icon.icon.dawn }}.png">
+                    </span>
+                    <span class="temperature">min {{ item.temperature.min }}°</span>
+                    <span class="temperature">max {{ item.temperature.max }}°</span>
+                  </li>
+                </ng-container>
               </ul>
             </div>
           </div>
@@ -129,3 +83,4 @@
   </div>
   <div class="bg" style="background-image:url('http://blog.avianca.com.br/wp-content/uploads/2017/05/BLUMENAU-SC-iStock-605987594-2.jpg')"></div>
 </div>
+

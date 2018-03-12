@@ -1,0 +1,21 @@
+.form-weather {
+  background-color: $default-background;
+  border: 0;
+  margin: 2px;
+  color: white;
+  padding: 4px 10px;
+  font-size: 1em;
+
+  &::-webkit-input-placeholder{
+    color: white;
+  }
+}
+
+select.form-weather {
+  padding-bottom: 5px;
+
+  option {
+    color: black;
+    background-color: white;
+  }
+}

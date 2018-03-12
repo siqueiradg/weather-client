@@ -8,17 +8,14 @@ import { WeatherNow } from '../shared/interface/weather-now.interface';
 import { WeatherAll } from './../shared/interface/weather-all.interface';
 
 @Injectable()
-export class WeatherService{
+export class WeatherService {
 
-  private searchWeatherUrl: string;
-  private historyWeatherUrl: string;
-  private searchCity: string;
+  private searchWeatherUrl = '/api/v1/weather/locale/';
+  private historyWeatherUrl = '/api/v1/forecast/locale/';
+  private searchCity = '/api/v1/locale/city?name=';
   private params: string;
 
   constructor(private http: HttpClient) {
-    this.searchWeatherUrl = '/api/v1/weather/locale/';
-    this.historyWeatherUrl = '/api/v1/forecast/locale/';
-    this.searchCity = '/api/v1/locale/city?name=';
     this.params = '?token=' + GeneralConfig.tokenClimaTempo.key;
   }
 
@@ -28,5 +25,9 @@ export class WeatherService{
 
   getWeatherAll(codeCity: number): Observable<WeatherAll> {
     return this.http.get<WeatherAll>( this.historyWeatherUrl + codeCity + '/days/15' + this.params);
+  }
+
+  getIdCity(city: string, state: string): Observable<Response> {
+    return this.http.get<Response>( this.searchCity + city + '&state=' + state + '&token=' + GeneralConfig.tokenClimaTempo.key);
   }
 }

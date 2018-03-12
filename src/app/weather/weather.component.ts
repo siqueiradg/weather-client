@@ -1,15 +1,18 @@
-import { WeatherData } from './../shared/model/weather-data.model';
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+
+import { } from 'googlemaps';
+import { MapsAPILoader } from '@agm/core';
 
 import { WeatherService } from './weather.service';
 import { WeatherNow } from './../shared/interface/weather-now.interface';
 import { WeatherAll } from './../shared/interface/weather-all.interface';
 import { WeatherTemperature } from '../shared/model/weather-temperature.model';
+import { WeatherData } from './../shared/model/weather-data.model';
 import { Chart } from 'chart.js';
-import { CityFavorite } from '../shared/model/city-favorite';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { BingService } from '../shared/services/bing.service';
+import { ToastService } from '../shared/services/toast.service';
 
 @Component({
   selector: 'app-weather',
@@ -18,18 +21,23 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 export class WeatherComponent implements OnInit {
 
+  @ViewChild('searchCity') searchElementRef: ElementRef;
+
   private subs: Subscription;
   weatherNow: WeatherNow;
   weatherAll: WeatherAll;
   weatherData: WeatherData;
+  urlBackground: string;
   chart = [];
-  bookmarks = [];
 
   constructor(
+    private toast: ToastService,
+    private mapsAPILoader: MapsAPILoader,
+    private ngZone: NgZone,
+    private bing: BingService,
     private weatherService: WeatherService,
     private router: Router,
-    private route: ActivatedRoute,
-    private modalService: NgbModal
+    private route: ActivatedRoute
   ) {
     this.weatherData = new WeatherData();
     this.weatherData.temperature = new WeatherTemperature();
@@ -37,13 +45,42 @@ export class WeatherComponent implements OnInit {
 
   ngOnInit() {
     this.loadWeatherNow();
-    this.loadBookmarks();
+
+    this.mapsAPILoader.load().then(() => {
+      const autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
+        types: ['(cities)'],
+        componentRestrictions: { country: 'BR' }
+      });
+      autocomplete.addListener('place_changed', () => {
+        this.ngZone.run(() => {
+
+          const place: google.maps.places.PlaceResult = autocomplete.getPlace();
+          this.searchElementRef.nativeElement.value = place.name;
+
+          if (place.geometry === undefined || place.geometry === null) {
+            return;
+          }
+        });
+      });
+    });
+  }
+
+  loadBackground(city: string): void {
+    this.bing.getBackgroundCity(city).subscribe(
+      (data: any) => {
+        this.urlBackground = data.value[0].contentUrl;
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
   }
 
   loadWeatherNow(): void {
     this.subs = this.route.data.subscribe(
       (data: WeatherNow) => {
         this.weatherNow = data[0];
+        this.loadBackground(this.weatherNow.name);
         this.loadWeatherAll();
       },
       (error: any) => {
@@ -66,9 +103,9 @@ export class WeatherComponent implements OnInit {
   }
 
   loadDataChart(array: any[]): void {
-    let dataMin = [];
-    let dataMax = [];
-    let labels = [];
+    const dataMin = [];
+    const dataMax = [];
+    const labels = [];
 
     array.slice(0, 7).forEach(
       (data) => {
@@ -79,11 +116,11 @@ export class WeatherComponent implements OnInit {
       }
     );
 
-    this.loadChart(labels, dataMin, dataMax)
+    this.loadChart(labels, dataMin, dataMax);
   }
 
   loadChart(labels, dataMin, dataMax): void {
-    Chart.defaults.global.defaultFontColor = "#fff";
+    Chart.defaults.global.defaultFontColor = '#fff';
     this.chart = new Chart('chartTemperature', {
       type: 'line',
       data: {
@@ -91,14 +128,14 @@ export class WeatherComponent implements OnInit {
         datasets: [
           {
             data: dataMin,
-            borderColor: "#a4d5fa",
-            backgroundColor: "rgba(0,0,0,.40)",
+            borderColor: '#a4d5fa',
+            backgroundColor: 'rgba(0,0,0,.40)',
             fill: false
           },
           {
             data: dataMax,
-            borderColor: "#ff0000",
-            backgroundColor: "rgba(0,0,0,.40)",
+            borderColor: '#ff0000',
+            backgroundColor: 'rgba(0,0,0,.40)',
             fill: false
           },
         ]
@@ -119,22 +156,70 @@ export class WeatherComponent implements OnInit {
     });
   }
 
-  loadBookmarks(): void {
-    if (localStorage.getItem('offlineData') != undefined) {
-      this.bookmarks = JSON.parse(localStorage.getItem('offlineData'));
+  changeLocation(city, state): void {
+    this.weatherService.getIdCity(city, state).subscribe(
+      (data) => {
+        this.changeWeatherNow(data);
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+  changeWeatherNow(city: any): void {
+    if (city[0].id !== undefined) {
+      this.weatherService.getWeatherNow(city[0].id).subscribe(
+        (data: WeatherNow) => {
+          this.weatherNow = data;
+          this.loadBackground(data.name);
+          this.loadWeatherAll();
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
     }
   }
 
   addCity(): void {
-    let favorite = new CityFavorite();
-    favorite.code = this.weatherNow.id;
-    favorite.name = this.weatherNow.name + ' - ' + this.weatherNow.state;
-    this.bookmarks.push(favorite);
-    localStorage.setItem('offlineData', JSON.stringify(this.bookmarks));
+    const data = JSON.parse(localStorage.getItem('offlineData'));
+    if (data !== this.weatherNow.id) {
+      localStorage.setItem('offlineData', '' + this.weatherNow.id);
+      this.toast.showToast('Adicionada como favorita');
+    } else {
+      localStorage.clear();
+      this.toast.showToast('Removido');
+    }
   }
 
-  open(content) {
-    this.modalService.open(content);
+  isFavorite(): boolean {
+    const data = JSON.parse(localStorage.getItem('offlineData'));
+    if (data === this.weatherNow.id) {
+      return true;
+    }
+    return false;
+  }
+
+  getCondition(icon): string {
+    switch (icon) {
+      case '1':
+        return 'Que tal uma piscina ou praia?';
+      case '2':
+        return 'O clima está bom para atividades físicas.';
+      case '3':
+        return 'Se for sair leve o guarda-chuva!';
+      case '4':
+        return 'Se for sair leve o guarda-chuva!';
+      case '5':
+        return 'Se for sair leve o guarda-chuva!';
+      case '6':
+        return 'Chuva muito forte, melhor ficar em casa!';
+      case '9':
+        return 'Ótimo dia para uma caminhada!';
+      default:
+        return 'Que tal uma atividade alternativa hoje?';
+    }
   }
 
 }

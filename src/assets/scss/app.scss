@@ -3,13 +3,11 @@
 
 //  Common
 @import 'common/general';
-@import 'common/header';
-@import 'common/footer';
+@import 'common/helper';
 
 //  Elements
 @import 'elements/card';
-@import 'elements/modal';
 @import 'elements/list';
-
-// Plugins
-@import 'plugins/chartjs'
+@import 'elements/form';
+@import 'elements/button';
+@import 'elements/toast';

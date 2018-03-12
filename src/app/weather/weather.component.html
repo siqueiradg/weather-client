@@ -2,22 +2,64 @@
   <div class="container">
     <header id="top">
       <div class="row">
+          <div class="col-12 col-md-6 col-lg-6">
+            <div class="form-inline">
+                <div class="form-group">
+                    <select class="form-weather" #state>
+                      <option disabled selected>UF</option>
+                      <option value="AC">AC</option>
+                      <option value="AL">AL</option>
+                      <option value="AP">AP</option>
+                      <option value="AM">AM</option>
+                      <option value="BA">BA</option>
+                      <option value="CE">CE</option>
+                      <option value="DF">DF</option>
+                      <option value="ES">ES</option>
+                      <option value="GO">GO</option>
+                      <option value="MA">MA</option>
+                      <option value="MT">MT</option>
+                      <option value="MS">MS</option>
+                      <option value="MG">MG</option>
+                      <option value="PA">PA</option>
+                      <option value="PB">PB</option>
+                      <option value="PR">PR</option>
+                      <option value="PE">PE</option>
+                      <option value="PI">PI</option>
+                      <option value="RJ">RJ</option>
+                      <option value="RN">RN</option>
+                      <option value="RS">RS</option>
+                      <option value="RO">RO</option>
+                      <option value="RR">RR</option>
+                      <option value="SC">SC</option>
+                      <option value="SP">SP</option>
+                      <option value="SE">SE</option>
+                      <option value="TO">TO</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <input placeholder="Cidade..." autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-weather" #searchCity>
+                  </div>
+                  <div class="form-group">
+                    <button class="default-btn" (click)="changeLocation(searchCity.value, state.value)"><i class="ti-search"></i></button>
+                  </div>
+            </div>
+          </div>
+      </div>
+      <div class="row">
         <div class="col-12 col-md-7">
           <div class="city">
             <div class="city-container">
               <h1 class="city">{{ weatherNow.name }} - {{ weatherNow.state }}</h1>
               <div class="buttons">
                 <button (click)="addCity()">
-                  <i class="ti-star"></i>
+                  <i class="ti-star" [ngClass]="{ 'yellow': isFavorite(), 'white': !isFavorite()  }"></i>
                 </button>
-                <button (click)="open(content)">
-                  <i class="ti-location-pin"></i> Alterar Localização</button>
               </div>
             </div>
             <span class="country">Brasil</span>
             <span class="date">{{ weatherNow.data.date | date:'short'}}</span>
             <span class="tip">
-              <i class="ti-light-bulb"></i> O dia está ótimo para uma caminhada.
+              <i class="ti-light-bulb"></i> {{ getCondition(weatherNow.data.icon) }}
             </span>
           </div>
         </div>
@@ -67,7 +109,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="weatherAll != undefined" class="col-12 col-md-7">
+        <div class="col-12 col-md-7">
           <div class="cards">
             <div class="card-header">
               <h2>
@@ -81,29 +123,6 @@
       </div>
     </section>
   </div>
-  <div class="bg" style="background-image:url('')"></div>
+  <div class="bg" *ngIf="urlBackground != undefined"  [ngStyle]="{'background-image': 'url(' + urlBackground + ')'}"></div>
 </div>
-
-
-<ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-body">
-      <div class="new-location">
-        <i class="ti-location-pin"></i> Nova Localização
-      </div>
-      <div class="bookmarks">
-        <span>
-            <i class="ti-star"></i> Favoritos
-        </span>
-        <ul class="list-bookmarks">
-          <li class="item-favorite">Campo Grande - MS</li>
-          <li class="item-favorite">Socorro - SP</li>
-          <li class="item-favorite">Franca - SP</li>
-          <li class="item-favorite">Blumenau - SC</li>
-        </ul>
-      </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-sm btn-outline-light" (click)="updateCity()">Atualizar</button>
-      <button type="button" class="btn btn-sm btn-outline-light" (click)="c('Close click')"><i class="ti-close"></i></button>
-    </div>
-</ng-template>
+<div id="toast"></div>

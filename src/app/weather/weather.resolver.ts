@@ -16,8 +16,8 @@ export class WeatherResolver implements Resolve<WeatherNow> {
         ): Observable<any>|Promise<any>|any {
 
             const data = JSON.parse(localStorage.getItem('offlineData'));
-            if (data != undefined || data != null) {
-              return this.service.getWeatherNow(data[0].code);
+            if (data !== null) {
+              return this.service.getWeatherNow(data);
             } else {
               return this.service.getWeatherNow('5090');
             }

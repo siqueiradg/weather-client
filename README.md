@@ -1,4 +1,4 @@
-![](https://i.imgur.com/8uGMo89.png "Weather Client")
+![](https://i.imgur.com/Ijh68lP.jpg "Weather Client")
 
 ## Bem-vindo ao Weather Client
 
